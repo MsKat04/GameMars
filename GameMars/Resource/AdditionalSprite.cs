@@ -8,19 +8,22 @@ namespace GameMars.Resource
 {
     public class AdditionalSprite : ICloneable
     {
+        public Vector2 Velocity;
+
         protected float _rotation;
         protected Texture2D _texture;
+
         protected KeyboardState _currentKey;
         protected KeyboardState _previousKey;
 
         public Vector2 Position;
         public Vector2 Origin;
-
         public Vector2 Direction;
+
         public float RotationVelocity = 3f;
         public float LinearVelocity = 4f;
+        public AdditionalSprite Parent;
 
-        public AdditionalSprite Parent;//не обязателен
         public float LifeSpan = 0f;
         public bool IsRemoved = false;
 
@@ -28,6 +31,14 @@ namespace GameMars.Resource
         {
             _texture = texture;
             Origin = new Vector2(_texture.Height - 90, _texture.Width-80);
+        }
+
+        public Rectangle Rectangle//для столкновений
+        {
+            get
+            {
+                return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+            }
         }
 
         public virtual void Update(GameTime gameTime, List<AdditionalSprite> sprites)

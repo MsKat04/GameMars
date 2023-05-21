@@ -3,13 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
-using System.Numerics;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameMars.Resource
 {
-    public class Bullets: AdditionalSprite
+    public class Bullets : AdditionalSprite
+
     {
         private float _timer;
         public Bullets(Texture2D texture2D) : base(texture2D)
@@ -22,8 +23,11 @@ namespace GameMars.Resource
 
             if (_timer > LifeSpan)
                 IsRemoved = true;
+            if (Rectangle.Bottom >= Game1.ScreenHeight)
+                IsRemoved = true;
 
             Position += Direction * LinearVelocity;
+
             base.Update(gameTime, sprite);
         }
     }

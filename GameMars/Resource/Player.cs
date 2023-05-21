@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameMars.Resource
 {
-    public class SpritePerson: AdditionalSprite
+    public class Player: AdditionalSprite
     {
         public float Speed = 3;
         public Input Input;
@@ -17,7 +17,7 @@ namespace GameMars.Resource
 
         public Bullets Bullets;
 
-        public SpritePerson(Texture2D texture):base (texture)
+        public Player(Texture2D texture):base (texture)
         {
             Position = new Vector2(100, 100);
         }
