@@ -63,7 +63,6 @@ namespace GameMars
                     i--;
                 }
             }
-            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
