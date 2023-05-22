@@ -24,7 +24,6 @@ namespace GameMars
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
             ScreenHeight = _graphics.PreferredBackBufferHeight;
             ScreenWidth = _graphics.PreferredBackBufferWidth;
         }
@@ -32,18 +31,31 @@ namespace GameMars
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            //ScreenHeight = _graphics.PreferredBackBufferHeight;
+            //ScreenWidth = _graphics.PreferredBackBufferWidth;
 
+            //_graphics.IsFullScreen= true;
+            //_graphics.ApplyChanges();
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            if(Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             var texture = Content.Load<Texture2D>("demon");
 
+            var animation = new Dictionary<string, AnimationModel>()
+            {
+                { "playerRun", new AnimationModel(Content.Load<Texture2D>("Player/playerRun"),8) },
+                { "playerRunLeft", new AnimationModel(Content.Load<Texture2D>("Player/playerRunLeft"),8) },
+            };
+
             _sprites = new List<AdditionalSprite>()
             {
-                new Player(texture)
+                new Player(animation)
                 {
                     Position = new Vector2(100, 100),
                     Input= new Input()
@@ -90,7 +102,7 @@ namespace GameMars
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.MistyRose);
             _spriteBatch.Begin();
             foreach (var sprite in _sprites)
                 sprite.Draw(_spriteBatch);

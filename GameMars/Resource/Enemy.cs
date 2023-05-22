@@ -14,21 +14,26 @@ namespace GameMars.Resource
         public Color Colors = Color.White;
         public Input Input;
 
-        public Enemy(Texture2D texture) : base(texture){}
+        public Enemy(Texture2D texture) : base(texture)
+        {
+        }
 
         public override void Update(GameTime gameTime, List<AdditionalSprite> sprites)
         {
+
             foreach (var sprite in sprites)
             {
+
                 if (sprite == this)
                     continue;
 
-                if (sprite.Rectangle.Intersects(Rectangle))
-                {
-                    HasDied = true;
-                    if (HasDied)
-                        IsRemoved = true;
-                }
+                //if (sprite.Rectangle.Intersects(Rectangle))
+                //{
+                //    HasDied = true;
+                //    if (HasDied)
+                //        IsRemoved = true;
+                //}
+
             }
 
             Position += Velocity;

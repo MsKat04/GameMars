@@ -13,7 +13,7 @@ namespace GameMars.Resource
 
     {
         private float _timer;
-        public Bullets(Texture2D texture2D) : base(texture2D)
+        public Bullets(Texture2D texture ) : base(texture)
         {
         }
 
