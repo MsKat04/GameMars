@@ -1,4 +1,4 @@
-﻿using GameMars.AnimaPers;
+﻿using GameMars.Resource;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,15 +7,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
-namespace GameMars.Resource
+namespace GameMars.Sprites
 {
-    public class Player: AdditionalSprite
+    public class Player : Helper
     {
+        public Player(Dictionary<string, AnimationModel> animation) : base(animation)
+        {
+        }
+
+        public bool IsDead
+        {
+            get
+            {
+                return Health <= 0;
+            }
+        }
+
         public Input Input;
         protected Vector2 _position;
-        public Vector2 Position
+        public new Vector2 Position
         {
             get { return _position; }
             set
@@ -28,14 +39,6 @@ namespace GameMars.Resource
         }
 
         public Bullets Bullets;
-
-        public Player(Dictionary<string, AnimationModel> animation) : base(animation)
-        {
-        }
-        public Player(Texture2D texture) : base(texture)
-        {
-            Position = new Vector2(100, 100);
-        }
 
         public override void Update(GameTime gameTime, List<AdditionalSprite> sprites)
         {
@@ -72,15 +75,17 @@ namespace GameMars.Resource
             {
                 Direction = new Vector2((float)Math.Cos(_rotation), (float)Math.Sin(_rotation));
                 AddBullet(sprites);
+                Shoot(Speed * 2);
+                //_shootTimer = 0f;
             }
         }
 
         public void AddBullet(List<AdditionalSprite> sprites)
         {
             var bullet = Bullets.Clone() as Bullets;
-            bullet.Direction = this.Direction;
-            bullet.Position = this.Position;
-            bullet.LinearVelocity = this.LinearVelocity;
+            bullet.Direction = Direction;
+            bullet.Position = Position;
+            bullet.LinearVelocity = LinearVelocity;
             bullet.LifeSpan = 2f;
             bullet.Parent = this;
 
@@ -96,8 +101,19 @@ namespace GameMars.Resource
             else _animation.Stop();
         }
 
+        public override void OnCollide(AdditionalSprite sprite)
+        {
+            if(IsDead) return;
+
+            if (sprite is Bullets && ((Bullets)sprite).Parent is Enemy)
+                Health--;
+            if (sprite is Enemy)
+                Health -= 3;
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if(IsDead) return;
             if (_texture != null)
                 spriteBatch.Draw(_texture, Position, Color.White);
             else if (_animation != null)

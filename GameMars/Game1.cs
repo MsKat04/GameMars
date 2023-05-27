@@ -1,4 +1,5 @@
 ﻿using GameMars.Resource;
+using GameMars.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,6 +16,12 @@ namespace GameMars
         private SpriteBatch _spriteBatch;
 
         private List<AdditionalSprite> _sprites;
+        private Camera _camera;
+        private Texture2D _playerTexture;
+        private Texture2D _backgroundTexture;
+        private Vector2 _playerPosition;
+        public static Random Random;
+
 
         public static int ScreenHeight;
         public static int ScreenWidth;
@@ -30,12 +37,12 @@ namespace GameMars
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            //ScreenHeight = _graphics.PreferredBackBufferHeight;
-            //ScreenWidth = _graphics.PreferredBackBufferWidth;
+            Random = new Random();
+            ScreenHeight = _graphics.PreferredBackBufferHeight;
+            ScreenWidth = _graphics.PreferredBackBufferWidth;
 
             //_graphics.IsFullScreen= true;
-            //_graphics.ApplyChanges();
+            _graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -46,12 +53,15 @@ namespace GameMars
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             var texture = Content.Load<Texture2D>("demon");
-
             var animation = new Dictionary<string, AnimationModel>()
             {
                 { "playerRun", new AnimationModel(Content.Load<Texture2D>("Player/playerRun"),8) },
                 { "playerRunLeft", new AnimationModel(Content.Load<Texture2D>("Player/playerRunLeft"),8) },
             };
+
+            _camera = new Camera();
+            _backgroundTexture = Content.Load<Texture2D>("flag");
+            _playerTexture = Content.Load<Texture2D>("demon");
 
             _sprites = new List<AdditionalSprite>()
             {
@@ -66,13 +76,13 @@ namespace GameMars
                         Right = Keys.D,
                         Bullet = Keys.E,
                     },
-                    Bullets = new Bullets(Content.Load<Texture2D>("star"))
+                    Bullets = new Bullets(Content.Load<Texture2D>("star")),
                 },
                 new Enemy(texture)
                 {
                     Position = new Vector2((ScreenWidth/2) - (texture.Width/2), ScreenHeight - texture.Height),
                     Colors = Color.Black,
-                },
+                },//???
             };
         }
 
@@ -107,6 +117,20 @@ namespace GameMars
             foreach (var sprite in _sprites)
                 sprite.Draw(_spriteBatch);
             _spriteBatch.End();
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(_backgroundTexture, new Vector2(0, 0), Color.White);
+
+            _spriteBatch.End();
+
+            _spriteBatch.Begin(transformMatrix: _camera.Transform);
+
+            _spriteBatch.Draw(_playerTexture, _playerPosition, Color.Green);
+            _spriteBatch.Draw(_playerTexture, new Vector2(0, 0), Color.Red);
+
+            _spriteBatch.End();
+            base.Draw(gameTime);
+
             base.Draw(gameTime);
         }
     }

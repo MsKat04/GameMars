@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameMars.Resource
+namespace GameMars
 {
-    public class AnimationModel
+    public class AnimationModel:ICloneable
     {
         public int CurrentFrame { get; set; }
 
@@ -23,12 +23,18 @@ namespace GameMars.Resource
 
         public Texture2D Texture { get; private set; }
 
+        public float Layer { get; set; }
+
         public AnimationModel(Texture2D texture, int frameCount)
         {
             Texture = texture;
             FrameCount = frameCount;
             IsLooping = true;
             FrameSpeed = 0.2f;
+        }
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
